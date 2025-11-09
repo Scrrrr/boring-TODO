@@ -36,8 +36,10 @@ void load(Node *node)
 		char *p = strchr(buff,' ');
 
 		Todo *new = malloc(sizeof(Todo));
+
 		new->no = count++;
 		strcpy(new->content,p + 1);
+		new->next = NULL;
 
 		if(!strncmp(buff,"N",1))
 		{
@@ -47,8 +49,6 @@ void load(Node *node)
 		}else{
 			new->flag = '-';
 		}
-
-		new->next = NULL;
 
 		if(!node->head){
 			node->head = new;
@@ -132,6 +132,7 @@ void add(Node *head,const char *newtodo)
 	if(!head->head)
 	{
 		head->head = new;
+	    printf("「%s」を追加しました。\n",new->content);
 		return;
 	}
 
@@ -182,7 +183,35 @@ void done(Node *head,const char *number)
 
 void del(Node *head,const char *number)
 {
-	printf("Construction DEL ...\n");
+    int n = atoi(number);
+
+    Todo *now = head->head;
+    Todo *pre = NULL;
+
+
+    while(now != NULL && n != now->no)
+    {
+        pre = now;
+        now = now->next;
+    }
+
+    if(!now)
+    {
+        printf("その番号は見つかりませんでした。\n");
+        return;
+    }
+
+    //printf("pre %d,get %d\n",pre->no,now->no);
+    if(!pre)
+    {
+        head->head = now->next;
+    }else{
+        pre->next = now->next;
+    }
+    free(now);
+    save(head);
+
+
 }
 
 void freeall(Node *head)
