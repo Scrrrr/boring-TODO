@@ -39,10 +39,10 @@ void load(Node *node)
 		new->no = count++;
 		strcpy(new->content,p + 1);
 
-		if(!strncmp(buff,"未完了",3))
+		if(!strncmp(buff,"N",1))
 		{
 			new->flag = 'N';
-		}else if(!strncmp(buff,"完了",2)){
+		}else if(!strncmp(buff,"Y",1)){
 			new->flag = 'Y';
 		}else{
 			new->flag = '-';
@@ -72,11 +72,11 @@ void save(Node *head)
 		//printf("flag:%c        \n",now->flag);
 		//printf("content:%s     \n",now->content);
 		if(now->flag == 'Y')
-			fprintf(fp,"完了　 %s\n",now->content);
+			fprintf(fp,"Y %s\n",now->content);
 		else if(now->flag == 'N')
-			fprintf(fp,"未完了 %s\n",now->content);
+			fprintf(fp,"N %s\n",now->content);
 		else
-			fprintf(fp,"不明　 %s\n",now->content);
+			fprintf(fp,"- %s\n",now->content);
 
 		now = now->next;
 	}
@@ -188,17 +188,20 @@ void del(Node *head,const char *number)
 void freeall(Node *head)
 {
 	Todo *now = head->head;
-	//printf("Before now Memory:%p\n",now);
+    if(!now)
+    {
+        //printf("%p\n",(void *)now);
+        return;
+    }
+
 	while(now->next)
 	{
+        //printf("%p\n",(void *)now);
 		Todo *cur = now;
-		//printf("Before cur Memory:%p\n",cur);
 		now = now->next;
 		free(cur);
-		//printf("After  cur Memory:%p\n",cur);
 	}
 	free(now);
-	//printf("After now Memory:%p\n",now);
 }
 
 void Usage(const char *name)
